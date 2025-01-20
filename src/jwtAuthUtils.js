@@ -1,27 +1,31 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
-export class JWTAuth {
+class JWTAuth {
 	#secret = "";
 	#expiresIn = "";
 	constructor() {}
 
+	// Config method to initialize secret and expiration time
 	config(secret, expiresIn = "24h") {
 		this.#secret = secret;
 		this.#expiresIn = expiresIn;
 	}
 
+	// Method to create JWT token for a user
 	setUser(user) {
 		if (!user) throw new Error("User not found");
 
 		let obj = {};
 
 		Object.keys(user).forEach((key) => {
-			obj[key] = user[key]; // Corrected: Use user[key] instead of user.key
+			obj[key] = user[key];
 		});
 
+		// Sign and return JWT
 		return jwt.sign(obj, this.#secret, { expiresIn: this.#expiresIn });
 	}
 
+	// Method to verify and decode the token
 	getUser(token) {
 		try {
 			return !token ? null : jwt.verify(token, this.#secret);
@@ -33,10 +37,12 @@ export class JWTAuth {
 		}
 	}
 
+	// Middleware to restrict access to logged-in users only
 	restrictToLoggedInUserOnly() {
-		return async function (request, response, next) {
+		return (request, response, next) => {
 			const headers = request.headers?.authorization;
 
+			// If no authorization header, return error
 			if (!headers) {
 				return response
 					.status(401)
@@ -45,8 +51,9 @@ export class JWTAuth {
 
 			const token = headers.split(" ")[1];
 
+			// Use the getUser method to verify the token
 			try {
-				const user = await getUser(token, this.#secret); // Pass secret to getUser()
+				const user = this.getUser(token); // Access the getUser method correctly
 
 				if (!user) {
 					return response
@@ -54,9 +61,11 @@ export class JWTAuth {
 						.json({ message: "You must be logged in" });
 				}
 
-				request.user = user; // Attach user to the request object
+				// Attach the user to the request object
+				request.user = user;
 				next(); // Proceed to the next middleware or route handler
 			} catch (error) {
+				// Handle any errors that occur during token verification
 				return response.status(401).json({
 					message: "Invalid token or error occurred",
 				});
@@ -65,4 +74,4 @@ export class JWTAuth {
 	}
 }
 
-// module.exports = { setUser, getUser, restrictToLoggedInUserOnly };
+module.exports = { JWTAuth };
