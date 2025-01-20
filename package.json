@@ -62,7 +62,7 @@
     "Node.js"
   ],
   "author": "InnoDareDevil",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "chalk": "^5.4.1",
     "dotenv": "^16.4.7",
