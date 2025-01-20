@@ -1,7 +1,12 @@
-const chalk = require("chalk");
+
 const readline = require("readline");
 const path = require("path");
 const fs = require("fs");
+let chalk;
+
+(async () => {
+	chalk = (await import("chalk")).default;
+})();
 
 
 /**
