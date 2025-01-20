@@ -74,4 +74,4 @@ class JWTAuth {
 	}
 }
 
-module.exports = { JWTAuth };
+module.exports = JWTAuth;
