@@ -38,7 +38,7 @@ class JWTAuth {
 	}
 
 	// Middleware to restrict access to logged-in users only
-	restrictToLoggedInUserOnly(request, response, next) {
+	restrictToLoggedInUserOnly = (request, response, next) =>{
 			const headers = request.headers?.authorization;
 
 			// If no authorization header, return error
