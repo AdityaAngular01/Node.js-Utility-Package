@@ -63,6 +63,10 @@
   ],
   "author": "InnoDareDevil",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AdityaAngular01/Node.js-Utility-Package.git"
+  },
   "dependencies": {
     "chalk": "^5.4.1",
     "dotenv": "^16.4.7",
