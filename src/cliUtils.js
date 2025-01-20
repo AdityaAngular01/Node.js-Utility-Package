@@ -1,7 +1,7 @@
 const readline = require("readline");
 const path = require("path");
 const fs = require("fs");
-const chalk = require("chalk");
+const chalk = await require("chalk");
 
 /**
  * Parses command-line arguments and returns an object.
