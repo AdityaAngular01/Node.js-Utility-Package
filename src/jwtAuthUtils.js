@@ -1,16 +1,17 @@
 const jwt = require('jsonwebtoken');
 
-function setUser(user, secret, expiresIn='24h'){
+function setUser(user, secret, expiresIn = "24h") {
 	if (!user) throw new Error("User not found");
 
 	let obj = {};
 
 	Object.keys(user).forEach((key) => {
-		obj[key] = user.key;
+		obj[key] = user[key]; // Corrected: Use user[key] instead of user.key
 	});
 
 	return jwt.sign(obj, secret, { expiresIn: expiresIn });
-};
+}
+
 
 function getUser(token, secret){
 
