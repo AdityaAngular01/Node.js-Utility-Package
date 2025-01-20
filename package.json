@@ -1,6 +1,6 @@
 {
   "name": "nodejs-utility-package",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "nodejs-utility-package is a versatile and lightweight library that provides a comprehensive collection of utility functions for Node.js developers. Whether you're handling strings, managing dates, validating inputs, or working with files, this package is designed to streamline your workflow and simplify common backend tasks. Ideal for projects of any scale, it helps you focus on building features instead of repetitive boilerplate code.",
   "main": "src/index.js",
   "scripts": {
