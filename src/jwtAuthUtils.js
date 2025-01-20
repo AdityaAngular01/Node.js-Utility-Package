@@ -37,24 +37,24 @@ function restrictToLoggedInUserOnly(secret) {
 
 		const token = headers.split(" ")[1];
 
-		try {
+		// try {
 			const user = await getUser(token, secret); // Pass secret to getUser()
 
 			if (!user) {
 				return response
 					.status(401)
-					.json({ error: { message: "You must be logged in" } });
+					.json( { message: "You must be logged in" });
 			}
 
 			request.user = user; // Attach user to the request object
 			next(); // Proceed to the next middleware or route handler
-		} catch (error) {
-			return response
-				.status(401)
-				.json({
-					error: { message: "Invalid token or error occurred" },
-				});
-		}
+		// } catch (error) {
+		// 	return response
+		// 		.status(401)
+		// 		.json({
+		// 			message: "Invalid token or error occurred"
+		// 		});
+		// }
 	};
 }
 
