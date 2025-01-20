@@ -1,62 +1,68 @@
 const jwt = require('jsonwebtoken');
 
-function setUser(user, secret, expiresIn = "24h") {
-	if (!user) throw new Error("User not found");
+export class JWTAuth {
+	#secret = "";
+	#expiresIn = "";
+	constructor() {}
 
-	let obj = {};
+	config(secret, expiresIn = "24h") {
+		this.#secret = secret;
+		this.#expiresIn = expiresIn;
+	}
 
-	Object.keys(user).forEach((key) => {
-		obj[key] = user[key]; // Corrected: Use user[key] instead of user.key
-	});
+	setUser(user) {
+		if (!user) throw new Error("User not found");
 
-	return jwt.sign(obj, secret, { expiresIn: expiresIn });
-}
+		let obj = {};
 
+		Object.keys(user).forEach((key) => {
+			obj[key] = user[key]; // Corrected: Use user[key] instead of user.key
+		});
 
-function getUser(token, secret){
+		return jwt.sign(obj, this.#secret, { expiresIn: this.#expiresIn });
+	}
 
-    try {
-        return !token? null : jwt.verify(token, secret)
-    } catch (err) {
-        if (err.name === 'TokenExpiredError') {
-            throw new Error("Token expired");
-        }
-        throw new Error("Invalid token");
-    }
-}
-
-function restrictToLoggedInUserOnly(secret) {
-	return async function (request, response, next) {
-		const headers = request.headers?.authorization;
-
-		if (!headers) {
-			return response
-				.status(401)
-				.json({ error: { message: "You must be logged in" } });
+	getUser(token) {
+		try {
+			return !token ? null : jwt.verify(token, this.#secret);
+		} catch (err) {
+			if (err.name === "TokenExpiredError") {
+				throw new Error("Token expired");
+			}
+			throw new Error("Invalid token");
 		}
+	}
 
-		const token = headers.split(" ")[1];
+	restrictToLoggedInUserOnly() {
+		return async function (request, response, next) {
+			const headers = request.headers?.authorization;
 
-		// try {
-			const user = await getUser(token, secret); // Pass secret to getUser()
-
-			if (!user) {
+			if (!headers) {
 				return response
 					.status(401)
-					.json( { message: "You must be logged in" });
+					.json({ error: { message: "You must be logged in" } });
 			}
 
-			request.user = user; // Attach user to the request object
-			next(); // Proceed to the next middleware or route handler
-		// } catch (error) {
-		// 	return response
-		// 		.status(401)
-		// 		.json({
-		// 			message: "Invalid token or error occurred"
-		// 		});
-		// }
-	};
+			const token = headers.split(" ")[1];
+
+			try {
+				const user = await getUser(token, this.#secret); // Pass secret to getUser()
+
+				if (!user) {
+					return response
+						.status(401)
+						.json({ message: "You must be logged in" });
+				}
+
+				request.user = user; // Attach user to the request object
+				next(); // Proceed to the next middleware or route handler
+			} catch (error) {
+				return response.status(401).json({
+					message: "Invalid token or error occurred",
+				});
+			}
+		};
+	}
 }
 
-
-module.exports = { setUser, getUser, restrictToLoggedInUserOnly };
+// module.exports = { setUser, getUser, restrictToLoggedInUserOnly };
