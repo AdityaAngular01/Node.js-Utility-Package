@@ -1,12 +1,8 @@
+const chalk = require("chalk");
 const readline = require("readline");
 const path = require("path");
 const fs = require("fs");
-async function loadChalk() {
-	const chalk = await import("chalk");
-	// Rest of your code that uses chalk
-}
 
-loadChalk().catch((err) => console.error(err));
 
 /**
  * Parses command-line arguments and returns an object.
