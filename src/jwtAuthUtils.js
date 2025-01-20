@@ -25,26 +25,38 @@ function getUser(token, secret){
     }
 }
 
-async function restrictToLoggedInUserOnly (token, secret, request, response, next) {
-	const headers = request.headers?.authorization;
+function restrictToLoggedInUserOnly(secret) {
+	return async function (request, response, next) {
+		const headers = request.headers?.authorization;
 
-	if (!headers)
-		return response
-			.status(401)
-			.json({ error: { message: "You must be logged in" } });
+		if (!headers) {
+			return response
+				.status(401)
+				.json({ error: { message: "You must be logged in" } });
+		}
 
-	const token = headers.split(" ")[1];
+		const token = headers.split(" ")[1];
 
-	const user = getUser(token, secret);
+		try {
+			const user = await getUser(token, secret); // Pass secret to getUser()
 
-	if (!user)
-		return response
-			.status(401)
-			.json({ error: { message: "You must be logged in" } });
+			if (!user) {
+				return response
+					.status(401)
+					.json({ error: { message: "You must be logged in" } });
+			}
 
-	request.user = user;
+			request.user = user; // Attach user to the request object
+			next(); // Proceed to the next middleware or route handler
+		} catch (error) {
+			return response
+				.status(401)
+				.json({
+					error: { message: "Invalid token or error occurred" },
+				});
+		}
+	};
+}
 
-	next();
-};
 
 module.exports = { setUser, getUser, restrictToLoggedInUserOnly };
