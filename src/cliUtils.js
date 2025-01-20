@@ -53,7 +53,8 @@ function askQuestion(question, hidden = false) {
  * Displays a success message to the user.
  * @param {string} message - The message to display.
  */
-function logSuccess(message) {
+async function logSuccess(message) {
+	const chalk = (await import('chalk')).default;
 	console.log(chalk.green(`✔ ${message}`));
 }
 
@@ -61,7 +62,8 @@ function logSuccess(message) {
  * Displays an error message to the user.
  * @param {string} message - The message to display.
  */
-function logError(message) {
+async function logError(message) {
+	const chalk = (await import("chalk")).default;
 	console.error(chalk.red(`✖ ${message}`));
 }
 
@@ -69,7 +71,8 @@ function logError(message) {
  * Displays an informational message to the user.
  * @param {string} message - The message to display.
  */
-function logInfo(message) {
+async function logInfo(message) {
+	const chalk = (await import("chalk")).default;
 	console.log(chalk.blue(`ℹ ${message}`));
 }
 
@@ -77,7 +80,8 @@ function logInfo(message) {
  * Displays a warning message to the user.
  * @param {string} message - The message to display.
  */
-function logWarning(message) {
+async function logWarning(message) {
+	const chalk = (await import("chalk")).default;
 	console.warn(chalk.yellow(`⚠ ${message}`));
 }
 
