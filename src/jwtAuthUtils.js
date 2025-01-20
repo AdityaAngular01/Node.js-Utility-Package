@@ -25,7 +25,7 @@ function getUser(token, secret){
     }
 }
 
-async function restrictToLoggedInUserOnly (request, response, next) {
+async function restrictToLoggedInUserOnly (token, secret, request, response, next) {
 	const headers = request.headers?.authorization;
 
 	if (!headers)
@@ -35,7 +35,7 @@ async function restrictToLoggedInUserOnly (request, response, next) {
 
 	const token = headers.split(" ")[1];
 
-	const user = getUser(token);
+	const user = getUser(token, secret);
 
 	if (!user)
 		return response
