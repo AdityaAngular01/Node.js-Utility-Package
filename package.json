@@ -65,7 +65,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AdityaAngular01/Node.js-Utility-Package.git"
+    "url": "git+https://github.com/AdityaAngular01/Node.js-Utility-Package.git"
   },
   "dependencies": {
     "chalk": "^5.4.1",
