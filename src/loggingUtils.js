@@ -60,9 +60,16 @@ function logErrorWithStack(error) {
  * @param {string} message - The log message.
  */
 function saveLogToFile(message) {
-	const logFilePath = path.join(__dirname, "app.log");
+	// Get the current working directory where the user is running the package
+	const logFilePath = path.join(process.cwd(), "app.log");
+
+	// Append the log message to the file
 	fs.appendFile(logFilePath, message + "\n", (err) => {
-		if (err) console.error("Failed to write to log file", err);
+		if (err) {
+			console.error("Failed to write to log file", err);
+		} else {
+			console.log(`Log saved to: ${logFilePath}`);
+		}
 	});
 }
 
@@ -70,12 +77,19 @@ function saveLogToFile(message) {
  * Clears the log file.
  */
 function clearLogFile() {
-	const logFilePath = path.join(__dirname, "app.log");
+	// Get the current working directory where the user is running the package
+	const logFilePath = path.join(process.cwd(), "app.log");
+
+	// Clear the contents of the log file
 	fs.truncate(logFilePath, 0, (err) => {
-		if (err) console.error("Failed to clear log file", err);
-		else console.log("Log file cleared.");
+		if (err) {
+			console.error("Failed to clear log file", err);
+		} else {
+			console.log("Log file cleared.");
+		}
 	});
 }
+
 
 /**
  * Rotates the log file if it exceeds the specified size.
@@ -83,7 +97,10 @@ function clearLogFile() {
  * @param {number} maxSize - The maximum size (in bytes) before rotation.
  */
 function rotateLogFile(logFilePath, maxSize = 5000000) {
-	// 5MB
+	// Get the current working directory where the user is running the package
+	const logDirectory = process.cwd();
+
+	// Check the size of the log file
 	fs.stat(logFilePath, (err, stats) => {
 		if (err) {
 			console.error("Failed to check log file size", err);
@@ -91,17 +108,24 @@ function rotateLogFile(logFilePath, maxSize = 5000000) {
 		}
 
 		if (stats.size > maxSize) {
+			// Create a new log file path with a timestamp
 			const newLogFilePath = path.join(
-				__dirname,
+				logDirectory,
 				`app-${Date.now()}.log`
 			);
+
+			// Rename the log file to rotate it
 			fs.rename(logFilePath, newLogFilePath, (err) => {
-				if (err) console.error("Failed to rotate log file", err);
-				else console.log(`Log file rotated to: ${newLogFilePath}`);
+				if (err) {
+					console.error("Failed to rotate log file", err);
+				} else {
+					console.log(`Log file rotated to: ${newLogFilePath}`);
+				}
 			});
 		}
 	});
 }
+
 
 /**
  * Creates a custom log format with additional metadata (like request ID, user ID).
